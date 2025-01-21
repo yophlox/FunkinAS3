@@ -11,7 +11,7 @@
 	
 	<initialWindow> 
 		<title>FunkinAS3</title> 
-		<content>FunkinAS3.swf</content> 
+		<content>Preloader.swf</content> 
 		<systemChrome>standard</systemChrome> 
 		<transparent>false</transparent> 
 		<visible>true</visible> 

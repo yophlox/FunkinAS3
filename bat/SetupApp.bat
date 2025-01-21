@@ -20,7 +20,7 @@ set APP_XML=application.xml
 
 :: Files to package
 set APP_DIR=bin
-set FILE_OR_DIR=-C %APP_DIR% .
+set FILE_OR_DIR=-C %APP_DIR% . -C ../assets .
 
 :: Your application ID (must match <id> of Application descriptor) and remove spaces
 for /f "tokens=3 delims=<>" %%a in ('findstr /R /C:"^[ 	]*<id>" %APP_XML%') do set APP_ID=%%a
