@@ -19,9 +19,28 @@
 		<maximizable>true</maximizable> 
 		<resizable>true</resizable> 
 	</initialWindow> 
+	<resizable>true</resizable>
+	<supportedProfiles>desktop extendedDesktop</supportedProfiles>
+	<content>bin\Preloader.swf</content>
+	<icon></icon>
+
+	<allowBrowserInvocation>true</allowBrowserInvocation>
+	<fileTypes></fileTypes>
+
+	<android>
+		<manifestAdditions><![CDATA[]]></manifestAdditions>
+	</android>
+
+	<assets path="assets">
+		<asset path="images" />
+	</assets>
 	
 	<!-- 
 	More options:
 	http://livedocs.adobe.com/flex/3/html/File_formats_1.html#1043413
 	-->
+
+	<assets>
+		<asset path="assets" />
+	</assets>
 </application>

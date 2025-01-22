@@ -2,6 +2,8 @@ package
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import engine.StateManager;
+	import funkin.states.TitleState;
 	
 	/**
 	 * ...
@@ -21,6 +23,10 @@ package
 			if (hasEventListener(Event.ADDED_TO_STAGE))
 				removeEventListener(Event.ADDED_TO_STAGE, init);				
 			trace("Main class initialized!");
+			
+			addChild(StateManager.Instance);
+			StateManager.Instance.switchState(TitleState);
+			trace("Switching to the TitleState!");
 		}
 		
 	}
