@@ -10,11 +10,13 @@ package funkin.game
     import flash.net.URLLoader;
     import flash.net.URLRequest;
     import funkin.game.SwagSong;
+    import funkin.states.PlayState;
+    import com.adobe.serialization.json.JSON;
     
     public class Song
     {
         public var song:String;
-        public var notes:Array; // Array of SwagSection
+        public var notes:Array;
         public var bpm:int;
         public var needsVoices:Boolean = true;
         public var speed:Number = 1;
@@ -29,34 +31,60 @@ package funkin.game
             this.bpm = bpm;
         }
         
-        public static function loadFromJson(jsonInput:String, folder:String = null, callback:Function = null):void
+        [Embed(source="../../../assets/data/bopeebo.json", mimeType="application/octet-stream")]
+        private static const BopeeboJson:Class;
+        
+        [Embed(source="../../../assets/data/bopeebo-easy.json", mimeType="application/octet-stream")]
+        private static const BopeeboEasyJson:Class;
+        
+        [Embed(source="../../../assets/data/bopeebo-hard.json", mimeType="application/octet-stream")]
+        private static const BopeeboHardJson:Class;
+        
+        public static function loadFromJson(songName:String, difficulty:String):SwagSong
         {
-            var path:String = 'assets/data/' + folder.toLowerCase() + '/' + jsonInput.toLowerCase() + '.json';
-            var loader:URLLoader = new URLLoader();
+            var jsonText:String;
             
-            loader.addEventListener(Event.COMPLETE, function(e:Event):void {
-                var rawJson:String = loader.data.toString().trim();
-                
-                while (!rawJson.charAt(rawJson.length - 1) == "}")
-                {
-                    rawJson = rawJson.substr(0, rawJson.length - 1);
-                }
-                
-                if (callback != null)
-                    callback(parseJSONshit(rawJson));
-            });
+            switch(songName.toLowerCase() + difficulty.toLowerCase())
+            {
+                case "bopeebo":
+                    jsonText = new BopeeboJson();
+                    break;
+                case "bopeebo-easy":
+                    jsonText = new BopeeboEasyJson();
+                    break;
+                case "bopeebo-hard":
+                    jsonText = new BopeeboHardJson();
+                    break;
+                default:
+                    trace("Song not found: " + songName + difficulty);
+                    var defaultSong:SwagSong = new SwagSong();
+                    defaultSong.song = songName;
+                    defaultSong.notes = [];
+                    defaultSong.bpm = 100;
+                    return defaultSong;
+            }
             
-            loader.load(new URLRequest(path));
+            try {
+                trace("Raw JSON text: " + jsonText);
+                var loadedSong:SwagSong = parseJSONshit(jsonText);
+                PlayState.SONG = loadedSong;
+                return loadedSong;
+            } catch (err:Error) {
+                trace("Failed to parse song json: " + err.message);
+                trace("Error at: " + err.getStackTrace());
+                var errorSong:SwagSong = new SwagSong();
+                errorSong.song = songName;
+                errorSong.notes = [];
+                errorSong.bpm = 100;
+                return errorSong;
+            }
         }
         
         private static function readFile(path:String):String
         {
-            // In AS3, we need to handle file loading differently
-            // This is a synchronous version - you might want to make this async
             var loader:URLLoader = new URLLoader();
             loader.load(new URLRequest(path));
             
-            // Wait for load to complete
             while (!loader.data) { }
             
             return loader.data as String;
@@ -64,20 +92,29 @@ package funkin.game
         
         public static function parseJSONshit(rawJson:String):SwagSong
         {
-            var jsonObj:Object = JSON.parse(rawJson);
-            var songData:Object = jsonObj.song;
-            
-            var swagShit:SwagSong = new SwagSong();
-            swagShit.song = songData.song;
-            swagShit.notes = songData.notes;
-            swagShit.bpm = songData.bpm;
-            swagShit.needsVoices = songData.needsVoices;
-            swagShit.speed = songData.speed;
-            swagShit.player1 = songData.player1;
-            swagShit.player2 = songData.player2;
-            swagShit.validScore = true;
-            
-            return swagShit;
+            try {
+                rawJson = rawJson.replace(/[\u0000-\u001F]/g, "");
+                rawJson = rawJson.replace(/^\uFEFF/, ""); 
+                
+                var jsonObj:Object = com.adobe.serialization.json.JSON.decode(rawJson);
+                var songData:Object = jsonObj.song;
+                
+                var swagShit:SwagSong = new SwagSong();
+                swagShit.song = songData.song;
+                swagShit.notes = songData.notes;
+                swagShit.bpm = songData.bpm;
+                swagShit.needsVoices = songData.needsVoices;
+                swagShit.speed = songData.speed;
+                swagShit.player1 = songData.player1;
+                swagShit.player2 = songData.player2;
+                swagShit.validScore = true;
+                
+                trace("Successfully parsed song data");
+                return swagShit;
+            } catch (err:Error) {
+                trace("Error in parseJSONshit: " + err.message);
+                throw err;
+            }
         }
     }
 }

@@ -6,3 +6,4 @@
 
 * [YoPhlox (me!)](https://github.com/YoPhlox) - Programming!
 * [Funkin' Crew](https://github.com/FunkinCrew) - Original Game!
+* [Mike Chambers](https://github.com/mikechambers) - as3corelib
