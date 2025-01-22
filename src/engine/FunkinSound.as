@@ -57,5 +57,17 @@ package engine
         {
             return _transform.volume;
         }
+        
+        public static function stop(sound:Sound):void
+        {
+            if (sound)
+            {
+                try {
+                    stopMusic();
+                } catch (e:Error) {
+                    trace("Error stopping sound: " + e.message);
+                }
+            }
+        }
     }
 }

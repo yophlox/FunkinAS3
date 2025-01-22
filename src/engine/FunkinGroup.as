@@ -71,5 +71,23 @@ package engine
         {
             return _length;
         }
+        
+        public function destroy():void
+        {
+            for each (var member:FunkinSprite in _members)
+            {
+                if (member && member.hasOwnProperty("destroy"))
+                {
+                    member.destroy();
+                }
+            }
+            
+            while (numChildren > 0)
+            {
+                removeChildAt(0);
+            }
+            
+            _members.length = 0;
+        }
     }
 }

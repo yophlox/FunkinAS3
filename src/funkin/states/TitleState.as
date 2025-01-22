@@ -10,35 +10,10 @@ package funkin.states
     import engine.StateManager;
     import funkin.states.PlayState;
     import engine.FunkinInput;
+    import Preloader;
 
     public class TitleState extends MusicBeatState
     {
-        // spritesheets and xmls (embed shit basically)
-        [Embed(source="../../../assets/images/gfDanceTitle.png")]
-        private static const GfImage:Class;
-        
-        [Embed(source="../../../assets/images/gfDanceTitle.xml", mimeType="application/octet-stream")]
-        private static const GfXml:Class;
-
-        [Embed(source="../../../assets/images/logoBumpin.png")]
-        private static const LogoImage:Class;
-        
-        [Embed(source="../../../assets/images/logoBumpin.xml", mimeType="application/octet-stream")]
-        private static const LogoXml:Class;
-
-        [Embed(source="../../../assets/images/titleEnter.png")]
-        private static const TitleEnterImage:Class;
-        
-        [Embed(source="../../../assets/images/titleEnter.xml", mimeType="application/octet-stream")]
-        private static const TitleEnterXml:Class;
-
-        [Embed(source="../../../assets/music/freakyMenu.mp3")]
-        private static const MenuMusic:Class;
-
-        [Embed(source="../../../assets/sounds/confirmMenu.mp3")]
-        private static const ConfirmMenu:Class;
-
-        // variables
         private var initialized:Boolean = false;
         private var gfDance:FunkinSprite;
         private var logoBl:FunkinSprite;
@@ -61,14 +36,14 @@ package funkin.states
             trace("TitleState: Starting intro...");
             if (!initialized)
             {
-                FunkinSound.playMusic(new MenuMusic(), 0);
+                FunkinSound.playMusic(new Preloader.MenuMusic(), 0);
                 initialized = true;
             }
             Conductor.changeBPM(102);
 
             logoBl = new FunkinSprite(-150, -100);
-            var bitmapLogo:Bitmap = new LogoImage();
-            var xmlLogo:XML = new XML(new LogoXml());
+            var bitmapLogo:Bitmap = new Preloader.LogoBumpImage();
+            var xmlLogo:XML = new XML(new Preloader.LogoBumpXml());
             
             logoBl.loadSparrowAtlas(bitmapLogo, xmlLogo);
             logoBl.animation_addByPrefix('bump', 'logo bumpin', 24, true);
@@ -76,8 +51,8 @@ package funkin.states
             logoBl.graphic.smoothing = true;
 
             gfDance = new FunkinSprite(stage.stageWidth * 0.4, stage.stageHeight * 0.07);
-            var bitmap:Bitmap = new GfImage();
-            var xml:XML = new XML(new GfXml());
+            var bitmap:Bitmap = new Preloader.GfImage();
+            var xml:XML = new XML(new Preloader.GfXml());
             
             gfDance.loadSparrowAtlas(bitmap, xml);
             gfDance.animation_addByIndices('danceLeft', 'gfDance', 
@@ -92,8 +67,8 @@ package funkin.states
             add(logoBl);
 
             titleEnter = new FunkinSprite(100, stage.stageHeight * 0.8);
-            var bitmapTitleEnter:Bitmap = new TitleEnterImage();
-            var xmlTitleEnter:XML = new XML(new TitleEnterXml());
+            var bitmapTitleEnter:Bitmap = new Preloader.TitleEnterImage();
+            var xmlTitleEnter:XML = new XML(new Preloader.TitleEnterXml());
             
             titleEnter.loadSparrowAtlas(bitmapTitleEnter, xmlTitleEnter);
             titleEnter.animation_addByPrefix('idle', 'Press Enter to Begin', 24, true);
@@ -109,8 +84,9 @@ package funkin.states
             {
                 trace("TitleState: Enter key pressed!");
                 titleEnter.animation_play('press', false, true);
-                FunkinSound.play(new ConfirmMenu(), 0.7);
+                FunkinSound.play(new Preloader.ConfirmMenu(), 0.7);
                 new FunkinTimer(2).start(2, function(tmr:FunkinTimer):void {
+                    FunkinSound.stopMusic();
                     StateManager.Instance.switchState(PlayState);
                 });
             }
@@ -128,7 +104,6 @@ package funkin.states
 
         override public function beatHit():void
         {
-           // trace("TitleState: Beat hit! Beat: " + curBeat);
             super.beatHit();
             
             if (logoBl != null)
@@ -142,6 +117,26 @@ package funkin.states
                 else
                     gfDance.animation_play('danceLeft');
             }
+        }
+
+        override public function destroy():void
+        {
+            if (gfDance != null) {
+                gfDance.destroy();
+                gfDance = null;
+            }
+            
+            if (logoBl != null) {
+                logoBl.destroy();
+                logoBl = null;
+            }
+            
+            if (titleEnter != null) {
+                titleEnter.destroy();
+                titleEnter = null;
+            }
+                        
+            super.destroy();
         }
     }
 } 
