@@ -6,7 +6,11 @@ package funkin.states
     import engine.FunkinTimer;
     import engine.FunkinSound;
     import funkin.game.Conductor;
-    
+    import flash.ui.Keyboard;
+    import engine.StateManager;
+    import funkin.states.PlayState;
+    import engine.FunkinInput;
+
     public class TitleState extends MusicBeatState
     {
         // spritesheets and xmls (embed shit basically)
@@ -31,12 +35,16 @@ package funkin.states
         [Embed(source="../../../assets/music/freakyMenu.mp3")]
         private static const MenuMusic:Class;
 
+        [Embed(source="../../../assets/sounds/confirmMenu.mp3")]
+        private static const ConfirmMenu:Class;
+
         // variables
         private var initialized:Boolean = false;
         private var gfDance:FunkinSprite;
         private var logoBl:FunkinSprite;
         private var titleEnter:FunkinSprite;
         private var danceLeft:Boolean = false;
+        private var skippedIntro:Boolean = false;
         
         override public function create():void
         {
@@ -91,12 +99,22 @@ package funkin.states
             titleEnter.animation_addByPrefix('idle', 'Press Enter to Begin', 24, true);
             titleEnter.animation_addByPrefix('press', 'ENTER PRESSED', 24, false);
             titleEnter.graphic.smoothing = true;
-            titleEnter.animation_play('idle');
+            titleEnter.animation_play('idle', false, true);
             add(titleEnter);
         }
         
         override public function update(elapsed:Number):void
-        {
+        {            
+            if (FunkinInput.justPressed(Keyboard.ENTER))
+            {
+                trace("TitleState: Enter key pressed!");
+                titleEnter.animation_play('press', false, true);
+                FunkinSound.play(new ConfirmMenu(), 0.7);
+                new FunkinTimer(2).start(2, function(tmr:FunkinTimer):void {
+                    StateManager.Instance.switchState(PlayState);
+                });
+            }
+
             if (FunkinSound.volume < 1)
             {
                 FunkinSound.volume += elapsed * 0.5;
@@ -110,7 +128,7 @@ package funkin.states
 
         override public function beatHit():void
         {
-            trace("TitleState: Beat hit! Beat: " + curBeat);
+           // trace("TitleState: Beat hit! Beat: " + curBeat);
             super.beatHit();
             
             if (logoBl != null)

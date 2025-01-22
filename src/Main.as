@@ -4,6 +4,7 @@ package
 	import flash.events.Event;
 	import engine.StateManager;
 	import funkin.states.TitleState;
+	import engine.FunkinInput;
 	
 	/**
 	 * ...
@@ -23,6 +24,8 @@ package
 			if (hasEventListener(Event.ADDED_TO_STAGE))
 				removeEventListener(Event.ADDED_TO_STAGE, init);				
 			trace("Main class initialized!");
+			
+			FunkinInput.init(stage);
 			
 			addChild(StateManager.Instance);
 			StateManager.Instance.switchState(TitleState);

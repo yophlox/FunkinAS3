@@ -124,7 +124,7 @@ package engine
             _animations[Name] = {frames: Frames, frameRate: FrameRate, loop: Loop};
         }
         
-        public function animation_play(Name:String, Force:Boolean = false):void
+        public function animation_play(Name:String, Force:Boolean = false, Loop:Boolean = true):void
         {
             if (_curAnim == Name && !Force)
                 return;
@@ -133,6 +133,7 @@ package engine
             _curFrame = 0;
             _frameTimer = 0;
             _frameRate = _animations[Name].frameRate;
+            _animations[Name].loop = Loop;
             updateFrame();
         }
         

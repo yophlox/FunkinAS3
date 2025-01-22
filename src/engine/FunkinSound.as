@@ -10,9 +10,11 @@ package engine
         private static var _musicChannel:SoundChannel;
         private static var _currentMusic:Sound;
         private static var _transform:SoundTransform;
+        private static var _sfxTransform:SoundTransform;
         
         {
             _transform = new SoundTransform(1);
+            _sfxTransform = new SoundTransform(1);
         }
         
         public static function playMusic(sound:Sound, volume:Number = 1, looped:Boolean = true):void
@@ -25,6 +27,12 @@ package engine
             _currentMusic = sound;
             _transform.volume = volume;
             _musicChannel = _currentMusic.play(0, looped ? int.MAX_VALUE : 0, _transform);
+        }
+        
+        public static function play(sound:Sound, volume:Number = 1):void
+        {
+            _sfxTransform.volume = volume;
+            sound.play(0, 0, _sfxTransform);
         }
         
         public static function stopMusic():void

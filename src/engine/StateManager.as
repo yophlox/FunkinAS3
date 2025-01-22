@@ -47,6 +47,8 @@ package engine
             
             if (currentState)
                 currentState.update(elapsed);
+            
+            FunkinInput.update();
         }
     }
 } 
