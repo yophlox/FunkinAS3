@@ -20,7 +20,9 @@ package engine
         protected var _frameRate:Number;
         
         public var angle:Number = 0;
-        public var scale:Point;
+        public var scale:PointWithSet;
+        public var scrollFactor:Point;
+        public var ID:int;
         
         protected var _frameWidth:int = 0;
         protected var _frameHeight:int = 0;
@@ -31,7 +33,9 @@ package engine
         {
             this.x = X;
             this.y = Y;
-            scale = new Point(1, 1);
+            scale = new PointWithSet(1, 1);
+            scrollFactor = new Point(1, 1);
+            ID = 0;
             graphic = new Bitmap();
             addChild(graphic);
             
@@ -218,22 +222,27 @@ package engine
             if (Width <= 0 && Height <= 0)
                 return;
                 
-            scale.x = Width / _frameWidth;
-            scale.y = Height / _frameHeight;
+            var newScaleX:Number = Width / _frameWidth;
+            var newScaleY:Number = Height / _frameHeight;
             
             if (Width <= 0)
-                scale.x = scale.y;
+                newScaleX = newScaleY;
             if (Height <= 0)
-                scale.y = scale.x;
+                newScaleY = newScaleX;
                 
-            graphic.scaleX = scale.x;
-            graphic.scaleY = scale.y;
+            scale.set(newScaleX, newScaleY);
+            updateHitbox();
         }
         
         public function updateHitbox():void
         {
-            graphic.scaleX = scale.x;
-            graphic.scaleY = scale.y;
+            if (graphic)
+            {
+                graphic.scaleX = scale.x;
+                graphic.scaleY = scale.y;
+                this.scaleX = scale.x;
+                this.scaleY = scale.y;
+            }
         }
         
         public function destroy():void
@@ -285,5 +294,30 @@ package engine
             }
             return str;
         }
+    }
+}
+
+class PointWithSet
+{
+    private var _x:Number;
+    private var _y:Number;
+    
+    public function PointWithSet(x:Number = 0, y:Number = 0)
+    {
+        _x = x;
+        _y = y;
+    }
+    
+    public function get x():Number { return _x; }
+    public function set x(value:Number):void { _x = value; }
+    
+    public function get y():Number { return _y; }
+    public function set y(value:Number):void { _y = value; }
+    
+    public function set(x:Number, y:Number):PointWithSet
+    {
+        _x = x;
+        _y = y;
+        return this;
     }
 }
