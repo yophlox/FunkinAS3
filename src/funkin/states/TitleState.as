@@ -22,6 +22,12 @@ package funkin.states
         [Embed(source="../../../assets/images/logoBumpin.xml", mimeType="application/octet-stream")]
         private static const LogoXml:Class;
 
+        [Embed(source="../../../assets/images/titleEnter.png")]
+        private static const TitleEnterImage:Class;
+        
+        [Embed(source="../../../assets/images/titleEnter.xml", mimeType="application/octet-stream")]
+        private static const TitleEnterXml:Class;
+
         [Embed(source="../../../assets/music/freakyMenu.mp3")]
         private static const MenuMusic:Class;
 
@@ -29,6 +35,7 @@ package funkin.states
         private var initialized:Boolean = false;
         private var gfDance:FunkinSprite;
         private var logoBl:FunkinSprite;
+        private var titleEnter:FunkinSprite;
         private var danceLeft:Boolean = false;
         
         override public function create():void
@@ -47,6 +54,7 @@ package funkin.states
             if (!initialized)
             {
                 FunkinSound.playMusic(new MenuMusic(), 0);
+                initialized = true;
             }
             Conductor.changeBPM(102);
 
@@ -58,7 +66,6 @@ package funkin.states
             logoBl.animation_addByPrefix('bump', 'logo bumpin', 24, true);
             logoBl.animation_play('bump');
             logoBl.graphic.smoothing = true;
-            add(logoBl);
 
             gfDance = new FunkinSprite(stage.stageWidth * 0.4, stage.stageHeight * 0.07);
             var bitmap:Bitmap = new GfImage();
@@ -74,6 +81,18 @@ package funkin.states
             gfDance.graphic.smoothing = true;
             gfDance.animation_play('danceLeft');
             add(gfDance);
+            add(logoBl);
+
+            titleEnter = new FunkinSprite(100, stage.stageHeight * 0.8);
+            var bitmapTitleEnter:Bitmap = new TitleEnterImage();
+            var xmlTitleEnter:XML = new XML(new TitleEnterXml());
+            
+            titleEnter.loadSparrowAtlas(bitmapTitleEnter, xmlTitleEnter);
+            titleEnter.animation_addByPrefix('idle', 'Press Enter to Begin', 24, true);
+            titleEnter.animation_addByPrefix('press', 'ENTER PRESSED', 24, false);
+            titleEnter.graphic.smoothing = true;
+            titleEnter.animation_play('idle');
+            add(titleEnter);
         }
         
         override public function update(elapsed:Number):void
@@ -85,19 +104,26 @@ package funkin.states
 
             if (gfDance != null) gfDance.update(elapsed);
             if (logoBl != null) logoBl.update(elapsed);
+            if (titleEnter != null) titleEnter.update(elapsed);
             super.update(elapsed);
         }
 
         override public function beatHit():void
         {
+            trace("TitleState: Beat hit! Beat: " + curBeat);
             super.beatHit();
-            logoBl.animation_play('bump');
-            danceLeft = !danceLeft;
-
-            if (danceLeft)
-                gfDance.animation_play('danceRight');
-            else
-                gfDance.animation_play('danceLeft');
+            
+            if (logoBl != null)
+                logoBl.animation_play('bump');
+                
+            if (gfDance != null)
+            {
+                danceLeft = !danceLeft;
+                if (danceLeft)
+                    gfDance.animation_play('danceRight');
+                else
+                    gfDance.animation_play('danceLeft');
+            }
         }
     }
 } 

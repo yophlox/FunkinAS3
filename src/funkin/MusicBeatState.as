@@ -4,13 +4,14 @@ package funkin
     import flash.events.Event;
     import funkin.game.BPMChangeEvent;
     import funkin.game.Conductor;
+    import flash.utils.getTimer;
     
     public class MusicBeatState extends FunkinState
     {
-        private var lastBeat:Number = 0;
-        private var lastStep:Number = 0;
-        private var curStep:int = 0;
-        private var curBeat:int = 0;
+        public var lastBeat:Number = 0;
+        public var lastStep:Number = 0;
+        public var curStep:int = 0;
+        public var curBeat:int = 0;
 
         override public function create():void
         {
@@ -19,8 +20,9 @@ package funkin
         
         override public function update(elapsed:Number):void
         {
+            Conductor.songPosition = getTimer();
+            
             var oldStep:int = curStep;
-
             updateCurStep();
             updateBeat();
 
