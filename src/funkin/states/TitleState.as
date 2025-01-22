@@ -4,6 +4,7 @@ package funkin.states
     import engine.FunkinSprite;
     import flash.display.Bitmap;
     import engine.FunkinTimer;
+    import engine.FunkinSound;
     import funkin.game.Conductor;
     
     public class TitleState extends MusicBeatState
@@ -21,13 +22,18 @@ package funkin.states
         [Embed(source="../../../assets/images/logoBumpin.xml", mimeType="application/octet-stream")]
         private static const LogoXml:Class;
 
+        [Embed(source="../../../assets/music/freakyMenu.mp3")]
+        private static const MenuMusic:Class;
+
         // variables
         private var initialized:Boolean = false;
         private var gfDance:FunkinSprite;
         private var logoBl:FunkinSprite;
+        private var danceLeft:Boolean = false;
         
         override public function create():void
         {
+            trace("TitleState: Creating...");
             super.create();
 
             new FunkinTimer(1).start(1, function(tmr:FunkinTimer):void {
@@ -38,6 +44,10 @@ package funkin.states
         private function startIntro():void
         {
             trace("TitleState: Starting intro...");
+            if (!initialized)
+            {
+                FunkinSound.playMusic(new MenuMusic(), 0);
+            }
             Conductor.changeBPM(102);
 
             logoBl = new FunkinSprite(-150, -100);
@@ -68,9 +78,26 @@ package funkin.states
         
         override public function update(elapsed:Number):void
         {
+            if (FunkinSound.volume < 1)
+            {
+                FunkinSound.volume += elapsed * 0.5;
+            }
+
             if (gfDance != null) gfDance.update(elapsed);
             if (logoBl != null) logoBl.update(elapsed);
             super.update(elapsed);
+        }
+
+        override public function beatHit():void
+        {
+            super.beatHit();
+            logoBl.animation_play('bump');
+            danceLeft = !danceLeft;
+
+            if (danceLeft)
+                gfDance.animation_play('danceRight');
+            else
+                gfDance.animation_play('danceLeft');
         }
     }
 } 
