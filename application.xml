@@ -1,46 +1,38 @@
-<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
 <application xmlns="http://ns.adobe.com/air/application/26.0">
-	
-	<id>FunkinAS3</id> 
-	<versionNumber>1.0</versionNumber> 
-	<filename>FunkinAS3</filename> 
-	
-	<name>FunkinAS3</name> 
-	<description></description> 
-	<copyright></copyright> 
-	
-	<initialWindow> 
-		<title>FunkinAS3</title> 
-		<content>Preloader.swf</content> 
-		<systemChrome>standard</systemChrome> 
-		<transparent>false</transparent> 
-		<visible>true</visible> 
-		<minimizable>true</minimizable> 
-		<maximizable>true</maximizable> 
-		<resizable>true</resizable> 
-	</initialWindow> 
-	<resizable>true</resizable>
-	<supportedProfiles>desktop extendedDesktop</supportedProfiles>
-	<content>bin\Preloader.swf</content>
-	<icon></icon>
-
-	<allowBrowserInvocation>true</allowBrowserInvocation>
-	<fileTypes></fileTypes>
-
-	<android>
-		<manifestAdditions><![CDATA[]]></manifestAdditions>
-	</android>
-
-	<assets path="assets">
-		<asset path="images" />
-	</assets>
-	
-	<!-- 
+  <id>FunkinAS3</id>
+  <versionNumber>1.0</versionNumber>
+  <filename>FunkinAS3</filename>
+  <name>Friday Night Funkin' ActionScript 3</name>
+  <description>A port of FNF to AS3!</description>
+  <copyright>YoPhlox</copyright>
+  <initialWindow>
+    <title>FunkinAS3</title>
+    <content>FunkinAS3.swf</content>
+    <systemChrome>standard</systemChrome>
+    <transparent>false</transparent>
+    <visible>true</visible>
+    <minimizable>true</minimizable>
+    <maximizable>true</maximizable>
+    <resizable>true</resizable>
+  </initialWindow>
+  <resizable>true</resizable>
+  <supportedProfiles>desktop extendedDesktop</supportedProfiles>
+  <content>bin\FunkinAS3.swf</content>
+  <icon>
+  </icon>
+  <allowBrowserInvocation>true</allowBrowserInvocation>
+  <android>
+    <manifestAdditions><![CDATA[<manifest android:installLocation="auto" xmlns:android="http://schemas.android.com/apk/res/android" />]]></manifestAdditions>
+  </android>
+  <assets path="assets">
+    <asset path="images" />
+  </assets>
+  <!-- 
 	More options:
 	http://livedocs.adobe.com/flex/3/html/File_formats_1.html#1043413
 	-->
-
-	<assets>
-		<asset path="assets" />
-	</assets>
+  <assets>
+    <asset path="assets" />
+  </assets>
 </application>

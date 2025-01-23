@@ -3,7 +3,7 @@
 		"source-path": [
 			"src"
 		],
-		"output": "bin/Preloader.swf",
+		"output": "bin/FunkinAS3.swf",
 		"default-frame-rate": 30,
 		"default-background-color": "#FFFFFF",
 		"default-size": {
