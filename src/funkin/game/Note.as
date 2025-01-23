@@ -26,7 +26,7 @@ package funkin.game
         public var isSustainNote:Boolean = false;
         public var noteScore:Number = 1;
         
-        public static var swagWidth:Number = 160 * 0.7;
+        public static var swagWidth:Number = 125;
         public static const PURP_NOTE:int = 0;
         public static const GREEN_NOTE:int = 2;
         public static const BLUE_NOTE:int = 1;
@@ -38,12 +38,12 @@ package funkin.game
             
             if (prevNote == null)
                 prevNote = this;
-                
+            
             this.prevNote = prevNote;
             this.isSustainNote = sustainNote;
             
             x += 50;
-            y -= 2000; 
+            y -= 2000;
             this.strumTime = strumTime;
             this.noteData = noteData;
             
@@ -153,7 +153,7 @@ package funkin.game
                 }
                 else
                     canBeHit = false;
-                    
+                
                 if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset)
                     tooLate = true;
             }
